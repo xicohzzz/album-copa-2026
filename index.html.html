@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controles de figurinhas Copa do Mundo 2026 </title>
+
+<style>
+:root{
+  --bg:#fff;
+  --text:#111;
+  --card:#f5f5f5;
+}
+.dark{
+  --bg:#121212;
+  --text:#fff;
+  --card:#1e1e1e;
+}
+
+body{
+  margin:0;
+  font-family:Arial;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header{
+  padding:20px;
+  text-align:center;
+  background:var(--card);
+  font-weight:bold;
+}
+
+.top{
+  text-align:center;
+  padding:10px;
+}
+
+input{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  width:200px;
+}
+
+select{
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  width:200px;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  margin:5px;
+  cursor:pointer;
+  background:#333;
+  color:white;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+  gap:10px;
+  padding:10px;
+}
+
+.sticker{
+  padding:12px;
+  border-radius:10px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.none{ background:#ff4d4d; color:white;}
+.have{ background:#2ecc71; color:white;}
+.repeat{ background:#006400; color:white;}
+
+.flag{
+  width:26px;
+  height:18px;
+  display:block;
+  margin:0 auto 5px;
+}
+
+.qty{
+  font-size:12px;
+  margin-top:5px;
+}
+
+.controls{
+  position:absolute;
+  bottom:6px;
+  left:0;
+  width:100%;
+  height:30px;
+}
+
+.ctrl-btn{
+  position:absolute;
+  background:none;
+  border:none;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#fff;
+  width:30px;
+  height:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:50;
+  text-shadow:0 0 5px #000;
+}
+
+.minus{ left:5px; }
+.plus{ right:5px; }
+
+.float{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:20px;
+  font-weight:bold;
+  animation:floatUp 0.8s ease-out forwards;
+}
+
+@keyframes floatUp{
+  0%{ opacity:1; transform:translate(-50%,0); }
+  100%{ opacity:0; transform:translate(-50%,-30px); }
+}
+
+.counter{
+  margin:10px;
+  padding:10px;
+  background:var(--card);
+  border-radius:10px;
+}
+
+/* SEU NOME */
+.credit-bottom{
+  text-align:center;
+  margin:30px 0;
+  padding-top:15px;
+  border-top:1px solid rgba(0,0,0,0.1);
+  font-size:13px;
+  opacity:0.7;
+}
+</style>
+</head>
+
+<body>
+
+<header>Controles de figurinhas Copa do Mundo 2026 </header>
+
+<div class="top">
+
+<input type="text" id="search" placeholder="Buscar..."><br>
+
+<select id="filter">
+<option value="ALL">Todas</option>
+</select><br>
+
+<button onclick="setMode('all')">Todas</button>
+<button onclick="setMode('repeat')">Repetidas</button>
+<button onclick="setMode('missing')">Faltando</button><br>
+
+<button onclick="toggleTheme()">Tema</button>
+<button onclick="resetAlbum()">Resetar</button>
+<button onclick="copyRepeated()">Copiar Repetidas</button>
+
+<div class="counter" id="counter"></div>
+
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="credit-bottom">
+  Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀
+</div>
+
+<script>
+
+// NOMES + FLAGS
+const teams = {
+MEX:{name:"México",flag:"mx"}, RSA:{name:"África do Sul",flag:"za"},
+KOR:{name:"Coreia do Sul",flag:"kr"}, CZE:{name:"Rep. Tcheca",flag:"cz"},
+CAN:{name:"Canadá",flag:"ca"}, BIH:{name:"Bósnia",flag:"ba"},
+QAT:{name:"Catar",flag:"qa"}, SUI:{name:"Suíça",flag:"ch"},
+
+BRA:{name:"Brasil",flag:"br"}, MAR:{name:"Marrocos",flag:"ma"},
+HAI:{name:"Haiti",flag:"ht"}, SCO:{name:"Escócia",flag:"gb"},
+USA:{name:"Estados Unidos",flag:"us"}, PAR:{name:"Paraguai",flag:"py"},
+AUS:{name:"Austrália",flag:"au"}, TUR:{name:"Turquia",flag:"tr"},
+
+GER:{name:"Alemanha",flag:"de"}, CUW:{name:"Curaçao",flag:"cw"},
+CIV:{name:"Costa do Marfim",flag:"ci"}, ECU:{name:"Equador",flag:"ec"},
+NED:{name:"Holanda",flag:"nl"}, JPN:{name:"Japão",flag:"jp"},
+SWE:{name:"Suécia",flag:"se"}, TUN:{name:"Tunísia",flag:"tn"},
+
+BEL:{name:"Bélgica",flag:"be"}, EGY:{name:"Egito",flag:"eg"},
+IRN:{name:"Irã",flag:"ir"}, NZL:{name:"Nova Zelândia",flag:"nz"},
+ESP:{name:"Espanha",flag:"es"}, CPV:{name:"Cabo Verde",flag:"cv"},
+KSA:{name:"Arábia Saudita",flag:"sa"}, URU:{name:"Uruguai",flag:"uy"},
+
+FRA:{name:"França",flag:"fr"}, SEN:{name:"Senegal",flag:"sn"},
+IRQ:{name:"Iraque",flag:"iq"}, NOR:{name:"Noruega",flag:"no"},
+ARG:{name:"Argentina",flag:"ar"}, ALG:{name:"Argélia",flag:"dz"},
+AUT:{name:"Áustria",flag:"at"}, JOR:{name:"Jordânia",flag:"jo"},
+
+POR:{name:"Portugal",flag:"pt"}, COD:{name:"Congo",flag:"cd"},
+UZB:{name:"Uzbequistão",flag:"uz"}, COL:{name:"Colômbia",flag:"co"},
+ENG:{name:"Inglaterra",flag:"gb"}, CRO:{name:"Croácia",flag:"hr"},
+GHA:{name:"Gana",flag:"gh"}, PAN:{name:"Panamá",flag:"pa"}
+};
+
+let stickers = [];
+
+// TIMES
+Object.keys(teams).forEach(t=>{
+  for(let i=1;i<=20;i++){
+    stickers.push({code:`${t} ${i}`, team:t});
+  }
+});
+
+// FWC
+for(let i=0;i<=19;i++){
+  stickers.push({code:`FWC ${i.toString().padStart(2,'0')}`, team:"FWC"});
+}
+
+// CC
+for(let i=1;i<=14;i++){
+  stickers.push({code:`CC${i}`, team:"CC"});
+}
+
+const grid=document.getElementById("grid");
+const counter=document.getElementById("counter");
+const filter=document.getElementById("filter");
+const search=document.getElementById("search");
+
+let mode="all";
+
+// filtro
+Object.keys(teams).forEach(t=>{
+  let opt=document.createElement("option");
+  opt.value=t;
+  opt.textContent=`${t} (${teams[t].name})`;
+  filter.appendChild(opt);
+});
+filter.innerHTML+=`<option value="FWC">FWC</option><option value="CC">CC</option>`;
+
+function getQty(c){return parseInt(localStorage.getItem(c))||0;}
+function setQty(c,q){q<=0?localStorage.removeItem(c):localStorage.setItem(c,q);}
+
+function setMode(m){mode=m;render();}
+
+function toggleTheme(){document.body.classList.toggle("dark");}
+
+function resetAlbum(){
+  if(confirm("Apagar tudo?")){
+    localStorage.clear(); render();
+  }
+}
+
+function copyRepeated(){
+  let lista=[];
+  stickers.forEach(s=>{
+    let qty=getQty(s.code);
+    if(qty>1){
+      let nome=teams[s.team]?.name || s.team;
+      lista.push(`${s.code} (${nome}) - ${qty-1}x`);
+    }
+  });
+  if(!lista.length){alert("Sem repetidas");return;}
+  navigator.clipboard.writeText(lista.join("\n"));
+  alert("Copiado!");
+}
+
+function render(){
+  grid.innerHTML="";
+  let owned=0,repeated=0;
+
+  stickers.forEach(s=>{
+    let qty=getQty(s.code);
+
+    if(filter.value!=="ALL" && s.team!==filter.value) return;
+    if(mode==="repeat" && qty<=1) return;
+    if(mode==="missing" && qty>0) return;
+    if(search.value && !s.code.toLowerCase().includes(search.value.toLowerCase())) return;
+
+    if(qty>0) owned++;
+    if(qty>1) repeated+=qty-1;
+
+    let flag = teams[s.team]?.flag || "un";
+
+    let div=document.createElement("div");
+    div.className="sticker "+(qty===0?"none":qty===1?"have":"repeat");
+
+    div.innerHTML=`
+      <img class="flag" src="https://flagcdn.com/w40/${flag}.png">
+      <div>${s.code}</div>
+      <div class="qty">${qty}</div>
+      <div class="controls">
+        <button class="ctrl-btn minus">-</button>
+        <button class="ctrl-btn plus">+</button>
+      </div>
+    `;
+
+    div.querySelector(".minus").onclick=()=>{
+      if(qty>0){setQty(s.code,qty-1);render();}
+    };
+
+    div.querySelector(".plus").onclick=()=>{
+      setQty(s.code,qty+1);render();
+    };
+
+    grid.appendChild(div);
+  });
+
+  let percent=((owned/stickers.length)*100).toFixed(1);
+
+  counter.innerHTML=`
+    ${owned} / ${stickers.length} (${percent}%)<br>
+    Repetidas: ${repeated}
+  `;
+}
+
+search.oninput=render;
+filter.onchange=render;
+
+render();
+
+</script>
+
+</body>
+</html>
