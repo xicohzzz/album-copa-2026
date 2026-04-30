@@ -301,15 +301,19 @@ function render(){
     let div=document.createElement("div");
     div.className="sticker "+(qty===0?"none":qty===1?"have":"repeat");
 
-    div.innerHTML=`
-      <img class="flag" src="https://flagcdn.com/w40/${flag}.png">
-      <div>${s.code}</div>
-      <div class="qty">${qty}</div>
-      <div class="controls">
-        <button class="ctrl-btn minus">-</button>
-        <button class="ctrl-btn plus">+</button>
-      </div>
-    `;
+    div.innerHTML = `
+  ${
+    (s.flag === "⭐" || s.flag === "🥤")
+    ? `<div class="flag">${s.flag}</div>`
+    : `<img class="flag" src="https://flagcdn.com/w40/${s.flag}.png">`
+  }
+  <div>${s.code}</div>
+  <div class="qty">${qty}</div>
+  <div class="controls">
+    <button class="ctrl-btn minus">-</button>
+    <button class="ctrl-btn plus">+</button>
+  </div>
+`;
 
     div.querySelector(".minus").onclick=()=>{
       if(qty>0){setQty(s.code,qty-1);render();}
