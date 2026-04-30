@@ -88,6 +88,11 @@ button{
   margin:0 auto 5px;
 }
 
+.icon{
+  margin-bottom:5px;
+  font-size:18px;
+}
+
 .qty{
   font-size:12px;
   margin-top:5px;
@@ -302,11 +307,7 @@ function render(){
     div.className="sticker "+(qty===0?"none":qty===1?"have":"repeat");
 
     div.innerHTML = `
-  ${
-    (s.flag === "⭐" || s.flag === "🥤")
-    ? `<div class="flag">${s.flag}</div>`
-    : `<img class="flag" src="https://flagcdn.com/w40/${s.flag}.png"
-  }
+  <div class="icon"></div>
   <div>${s.code}</div>
   <div class="qty">${qty}</div>
   <div class="controls">
@@ -314,6 +315,21 @@ function render(){
     <button class="ctrl-btn plus">+</button>
   </div>
 `;
+
+    let iconDiv = div.querySelector(".icon");
+
+if(s.team === "FWC"){
+  iconDiv.textContent = "⭐";
+
+}else if(s.team === "CC"){
+  iconDiv.textContent = "🥤";
+
+}else{
+  let img = document.createElement("img");
+  img.src = `https://flagcdn.com/w40/${s.flag}.png`;
+  img.className = "flag";
+  iconDiv.appendChild(img);
+}
 
     div.querySelector(".minus").onclick=()=>{
       if(qty>0){setQty(s.code,qty-1);render();}
