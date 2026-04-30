@@ -230,12 +230,12 @@ Object.keys(teams).forEach(t=>{
 
 // FWC
 for(let i=0;i<=19;i++){
-  stickers.push({code:`FWC ${i.toString().padStart(2,'0')}`, team:"FWC"});
+  stickers.push({code:`FWC ${i.toString().padStart(2,'0')}`, team:"FWC", flag:"⭐"});
 }
 
 // CC
 for(let i=1;i<=14;i++){
-  stickers.push({code:`CC${i}`, team:"CC"});
+  stickers.push({code:`CC${i}`, team:"CC", flag:"🥤"});
 }
 
 const grid=document.getElementById("grid");
