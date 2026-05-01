@@ -54,6 +54,10 @@ button{
   color:white;
 }
 
+#lockBtn.locked{
+  background:#e74c3c;
+}
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
@@ -90,7 +94,6 @@ button{
   margin-top:5px;
 }
 
-/* BOTÕES ORIGINAIS PERFEITOS */
 .controls{
   position:absolute;
   bottom:6px;
@@ -156,6 +159,7 @@ button{
 <button onclick="toggleTheme()">Tema</button>
 <button onclick="resetAlbum()">Resetar</button>
 <button onclick="copyRepeated()">Copiar Repetidas</button>
+<button onclick="toggleLock()" id="lockBtn">🔓 Destravado</button>
 
 <div class="counter" id="counter"></div>
 
@@ -169,7 +173,6 @@ button{
 
 <script>
 
-// TIMES COMPLETOS
 const teams = {
 MEX:{name:"México",flag:"mx"}, RSA:{name:"África do Sul",flag:"za"},
 KOR:{name:"Coreia do Sul",flag:"kr"}, CZE:{name:"Rep. Tcheca",flag:"cz"},
@@ -203,20 +206,18 @@ GHA:{name:"Gana",flag:"gh"}, PAN:{name:"Panamá",flag:"pa"}
 };
 
 let stickers = [];
+let locked = false;
 
-// TIMES
 Object.keys(teams).forEach(t=>{
   for(let i=1;i<=20;i++){
     stickers.push({code:`${t} ${i}`, team:t});
   }
 });
 
-// FWC
 for(let i=0;i<=19;i++){
   stickers.push({code:`FWC ${i.toString().padStart(2,'0')}`, team:"FWC"});
 }
 
-// CC
 for(let i=1;i<=14;i++){
   stickers.push({code:`CC${i}`, team:"CC"});
 }
@@ -228,7 +229,6 @@ const search=document.getElementById("search");
 
 let mode="all";
 
-// FILTRO
 Object.keys(teams).forEach(t=>{
   let opt=document.createElement("option");
   opt.value=t;
@@ -237,11 +237,23 @@ Object.keys(teams).forEach(t=>{
 });
 filter.innerHTML+=`<option value="FWC">FWC</option><option value="CC">CC</option>`;
 
-// FUNÇÕES
 function getQty(c){return parseInt(localStorage.getItem(c))||0;}
 function setQty(c,q){q<=0?localStorage.removeItem(c):localStorage.setItem(c,q);}
 function setMode(m){mode=m;render();}
 function toggleTheme(){document.body.classList.toggle("dark");}
+
+function toggleLock(){
+  locked = !locked;
+  const btn=document.getElementById("lockBtn");
+
+  if(locked){
+    btn.textContent="🔒 Travado";
+    btn.classList.add("locked");
+  }else{
+    btn.textContent="🔓 Destravado";
+    btn.classList.remove("locked");
+  }
+}
 
 function resetAlbum(){
   if(confirm("Apagar tudo?")){
@@ -263,7 +275,6 @@ function copyRepeated(){
   alert("Copiado!");
 }
 
-// RENDER
 function render(){
   grid.innerHTML="";
   let owned=0,repeated=0;
@@ -298,19 +309,23 @@ function render(){
       iconDiv.textContent="⭐";
     }else if(s.team==="CC"){
       iconDiv.textContent="🥤";
-    }else{
+    }else if(teams[s.team]){
       let img=document.createElement("img");
       img.src=`https://flagcdn.com/w40/${teams[s.team].flag}.png`;
       img.className="flag";
       img.onerror=()=>{iconDiv.textContent="🌍";};
       iconDiv.appendChild(img);
+    }else{
+      iconDiv.textContent="🌍";
     }
 
     div.querySelector(".minus").onclick=()=>{
+      if(locked) return;
       if(qty>0){setQty(s.code,qty-1);render();}
     };
 
     div.querySelector(".plus").onclick=()=>{
+      if(locked) return;
       setQty(s.code,qty+1);render();
     };
 
