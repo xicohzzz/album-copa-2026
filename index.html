@@ -323,10 +323,16 @@ if(s.team === "FWC"){
 }else if(s.team === "CC"){
   iconDiv.textContent = "🥤";
 
-}else if(s.flag && s.flag.length === 2){
+}else{
   let img = document.createElement("img");
   img.src = `https://flagcdn.com/w40/${s.flag}.png`;
   img.className = "flag";
+
+  // SE DER ERRO NA IMAGEM, NÃO QUEBRA
+  img.onerror = () => {
+    iconDiv.textContent = "🌍";
+  };
+
   iconDiv.appendChild(img);
 }
   
