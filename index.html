@@ -315,7 +315,6 @@ function render(){
     <button class="ctrl-btn plus">+</button>
   </div>
 `;
-
     let iconDiv = div.querySelector(".icon");
 
 if(s.team === "FWC"){
@@ -324,11 +323,13 @@ if(s.team === "FWC"){
 }else if(s.team === "CC"){
   iconDiv.textContent = "🥤";
 
-}else{
+}else if(s.flag && s.flag.length === 2){
   let img = document.createElement("img");
   img.src = `https://flagcdn.com/w40/${s.flag}.png`;
   img.className = "flag";
   iconDiv.appendChild(img);
+}
+  
 }
 
     div.querySelector(".minus").onclick=()=>{
