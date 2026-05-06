@@ -1,3 +1,6 @@
+# Código completo — Álbum Copa 2026 com QR Code
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -137,6 +140,15 @@ button{
   font-size:13px;
   opacity:0.7;
 }
+
+#qrContainer{
+  text-align:center;
+  margin-top:20px;
+}
+
+#qrcode{
+  margin-top:10px;
+}
 </style>
 </head>
 
@@ -161,15 +173,27 @@ button{
 <button onclick="copyRepeated()">Copiar Repetidas</button>
 <button onclick="toggleLock()" id="lockBtn">🔓 Destravado</button>
 
+<br>
+
+<button onclick="exportAlbum()">📤 Exportar</button>
+<button onclick="importAlbum()">📥 Importar</button>
+<button onclick="generateQR()">📱 Gerar QR Code</button>
+
 <div class="counter" id="counter"></div>
+
+<div id="qrContainer">
+  <div id="qrcode"></div>
+</div>
 
 </div>
 
 <div class="grid" id="grid"></div>
 
 <div class="credit-bottom">
-  Desenvolvido por <strong>Gabriel Yamashita</strong> 
+  Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
 
@@ -275,6 +299,73 @@ function copyRepeated(){
   alert("Copiado!");
 }
 
+function exportAlbum(){
+
+  const data = {};
+
+  stickers.forEach(s=>{
+    const qty = getQty(s.code);
+
+    if(qty > 0){
+      data[s.code] = qty;
+    }
+  });
+
+  const code = btoa(JSON.stringify(data));
+
+  navigator.clipboard.writeText(code);
+
+  alert("Código copiado!");
+}
+
+function importAlbum(){
+
+  const code = prompt("Cole o código:");
+
+  if(!code) return;
+
+  try{
+
+    const data = JSON.parse(atob(code));
+
+    localStorage.clear();
+
+    Object.keys(data).forEach(key=>{
+      localStorage.setItem(key, data[key]);
+    });
+
+    render();
+
+    alert("Álbum importado!");
+
+  }catch{
+    alert("Código inválido!");
+  }
+}
+
+function generateQR(){
+
+  const data = {};
+
+  stickers.forEach(s=>{
+    const qty = getQty(s.code);
+
+    if(qty > 0){
+      data[s.code] = qty;
+    }
+  });
+
+  const code = btoa(JSON.stringify(data));
+
+  document.getElementById("qrcode").innerHTML = "";
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: code,
+    width: 220,
+    height: 220
+  });
+}
+
 function render(){
   grid.innerHTML="";
   let owned=0,repeated=0;
@@ -349,3 +440,4 @@ render();
 
 </body>
 </html>
+```
