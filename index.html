@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Controles de figurinhas Copa do Mundo 2026</title>
+
+<title>Controles de Figurinhas Copa 2026</title>
 
 <style>
+
 :root{
-  --bg:#fff;
+  --bg:#ffffff;
   --text:#111;
   --card:#f5f5f5;
 }
 
 .dark{
   --bg:#121212;
-  --text:#fff;
+  --text:#ffffff;
   --card:#1e1e1e;
 }
 
@@ -29,34 +31,33 @@ header{
   padding:20px;
   text-align:center;
   background:var(--card);
+  font-size:22px;
   font-weight:bold;
 }
 
 .top{
   text-align:center;
-  padding:10px;
+  padding:15px;
 }
 
-input, select{
+input,
+select{
+  width:220px;
   padding:10px;
   border-radius:10px;
   border:1px solid #ccc;
-  width:200px;
   margin:5px;
 }
 
 button{
-  padding:10px;
+  padding:10px 14px;
   border:none;
   border-radius:10px;
-  margin:5px;
   cursor:pointer;
+  margin:5px;
   background:#333;
   color:white;
-}
-
-#lockBtn.locked{
-  background:#e74c3c;
+  font-weight:bold;
 }
 
 .grid{
@@ -72,6 +73,7 @@ button{
   text-align:center;
   position:relative;
   overflow:hidden;
+  min-height:120px;
 }
 
 .none{
@@ -98,7 +100,7 @@ button{
 
 .icon{
   margin-bottom:5px;
-  font-size:18px;
+  font-size:20px;
 }
 
 .qty{
@@ -118,7 +120,7 @@ button{
   position:absolute;
   background:none;
   border:none;
-  font-size:22px;
+  font-size:24px;
   font-weight:bold;
   cursor:pointer;
   color:#fff;
@@ -127,7 +129,7 @@ button{
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:10;
+  z-index:50;
   text-shadow:0 0 5px #000;
 }
 
@@ -140,10 +142,12 @@ button{
 }
 
 .counter{
-  margin:10px;
-  padding:10px;
+  margin-top:10px;
   background:var(--card);
-  border-radius:10px;
+  display:inline-block;
+  padding:12px;
+  border-radius:12px;
+  font-weight:bold;
 }
 
 .credit-bottom{
@@ -154,34 +158,57 @@ button{
   font-size:13px;
   opacity:0.7;
 }
+
 </style>
 </head>
 
 <body>
 
-<header>Controles de figurinhas Copa do Mundo 2026</header>
+<header>
+Controles de Figurinhas Copa do Mundo 2026
+</header>
 
 <div class="top">
 
-<input type="text" id="search" placeholder="Buscar..."><br>
-
-<select id="filter">
-<option value="ALL">Todas</option>
-</select><br>
-
-<button onclick="setMode('all')">Todas</button>
-<button onclick="setMode('repeat')">Repetidas</button>
-<button onclick="setMode('missing')">Faltando</button><br>
-
-<button onclick="toggleTheme()">Tema</button>
-<button onclick="resetAlbum()">Resetar</button>
-<button onclick="copyRepeated()">Copiar Repetidas</button>
-<button onclick="toggleLock()" id="lockBtn">🔓 Destravado</button>
+<input type="text" id="search" placeholder="Buscar figurinha...">
 
 <br>
 
-<button onclick="exportAlbum()">📤 Exportar</button>
-<button onclick="importAlbum()">📥 Importar</button>
+<select id="filter">
+<option value="ALL">Todas</option>
+</select>
+
+<br>
+
+<button onclick="setMode('all')">
+Todas
+</button>
+
+<button onclick="setMode('repeat')">
+Repetidas
+</button>
+
+<button onclick="setMode('missing')">
+Faltando
+</button>
+
+<br>
+
+<button onclick="toggleTheme()">
+Tema
+</button>
+
+<button onclick="resetAlbum()">
+Resetar
+</button>
+
+<button onclick="exportData()">
+Exportar
+</button>
+
+<button onclick="importData()">
+Importar
+</button>
 
 <div class="counter" id="counter"></div>
 
@@ -190,85 +217,54 @@ button{
 <div class="grid" id="grid"></div>
 
 <div class="credit-bottom">
-  Desenvolvido por <strong>Gabriel Yamashita</strong> 
+Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀
 </div>
 
 <script>
 
+// TIMES
 const teams = {
 
-MEX:{name:"México",flag:"mx"},
-RSA:{name:"África do Sul",flag:"za"},
-KOR:{name:"Coreia do Sul",flag:"kr"},
-CZE:{name:"Rep. Tcheca",flag:"cz"},
-CAN:{name:"Canadá",flag:"ca"},
-BIH:{name:"Bósnia",flag:"ba"},
-QAT:{name:"Catar",flag:"qa"},
-SUI:{name:"Suíça",flag:"ch"},
-
 BRA:{name:"Brasil",flag:"br"},
-MAR:{name:"Marrocos",flag:"ma"},
-HAI:{name:"Haiti",flag:"ht"},
-SCO:{name:"Escócia",flag:"gb"},
-USA:{name:"Estados Unidos",flag:"us"},
-PAR:{name:"Paraguai",flag:"py"},
-AUS:{name:"Austrália",flag:"au"},
-TUR:{name:"Turquia",flag:"tr"},
-
-GER:{name:"Alemanha",flag:"de"},
-CUW:{name:"Curaçao",flag:"cw"},
-CIV:{name:"Costa do Marfim",flag:"ci"},
-ECU:{name:"Equador",flag:"ec"},
-NED:{name:"Holanda",flag:"nl"},
-JPN:{name:"Japão",flag:"jp"},
-SWE:{name:"Suécia",flag:"se"},
-TUN:{name:"Tunísia",flag:"tn"},
-
-BEL:{name:"Bélgica",flag:"be"},
-EGY:{name:"Egito",flag:"eg"},
-IRN:{name:"Irã",flag:"ir"},
-NZL:{name:"Nova Zelândia",flag:"nz"},
-ESP:{name:"Espanha",flag:"es"},
-CPV:{name:"Cabo Verde",flag:"cv"},
-KSA:{name:"Arábia Saudita",flag:"sa"},
-URU:{name:"Uruguai",flag:"uy"},
-
-FRA:{name:"França",flag:"fr"},
-SEN:{name:"Senegal",flag:"sn"},
-IRQ:{name:"Iraque",flag:"iq"},
-NOR:{name:"Noruega",flag:"no"},
 ARG:{name:"Argentina",flag:"ar"},
-ALG:{name:"Argélia",flag:"dz"},
-AUT:{name:"Áustria",flag:"at"},
-JOR:{name:"Jordânia",flag:"jo"},
-
+FRA:{name:"França",flag:"fr"},
+GER:{name:"Alemanha",flag:"de"},
+ESP:{name:"Espanha",flag:"es"},
 POR:{name:"Portugal",flag:"pt"},
-COD:{name:"Congo",flag:"cd"},
-UZB:{name:"Uzbequistão",flag:"uz"},
-COL:{name:"Colômbia",flag:"co"},
 ENG:{name:"Inglaterra",flag:"gb"},
+USA:{name:"Estados Unidos",flag:"us"},
+URU:{name:"Uruguai",flag:"uy"},
 CRO:{name:"Croácia",flag:"hr"},
-GHA:{name:"Gana",flag:"gh"},
-PAN:{name:"Panamá",flag:"pa"}
+MEX:{name:"México",flag:"mx"},
+JPN:{name:"Japão",flag:"jp"},
+KOR:{name:"Coreia do Sul",flag:"kr"},
+MAR:{name:"Marrocos",flag:"ma"},
+NED:{name:"Holanda",flag:"nl"},
+BEL:{name:"Bélgica",flag:"be"},
+SUI:{name:"Suíça",flag:"ch"},
+COL:{name:"Colômbia",flag:"co"},
+PAR:{name:"Paraguai",flag:"py"},
+AUS:{name:"Austrália",flag:"au"}
 
 };
 
 let stickers = [];
-let locked = false;
 
-Object.keys(teams).forEach(t=>{
+// FIGURINHAS DOS TIMES
+Object.keys(teams).forEach(team=>{
 
   for(let i=1;i<=20;i++){
 
     stickers.push({
-      code:`${t} ${i}`,
-      team:t
+      code:`${team} ${i}`,
+      team:team
     });
 
   }
 
 });
 
+// FWC
 for(let i=0;i<=19;i++){
 
   stickers.push({
@@ -278,6 +274,7 @@ for(let i=0;i<=19;i++){
 
 }
 
+// CC
 for(let i=1;i<=14;i++){
 
   stickers.push({
@@ -288,18 +285,24 @@ for(let i=1;i<=14;i++){
 }
 
 const grid = document.getElementById("grid");
+
 const counter = document.getElementById("counter");
+
 const filter = document.getElementById("filter");
+
 const search = document.getElementById("search");
 
 let mode = "all";
 
+// FILTROS
 Object.keys(teams).forEach(t=>{
 
   let opt = document.createElement("option");
 
   opt.value = t;
-  opt.textContent = `${t} (${teams[t].name})`;
+
+  opt.textContent =
+  `${t} (${teams[t].name})`;
 
   filter.appendChild(opt);
 
@@ -310,21 +313,21 @@ filter.innerHTML += `
 <option value="CC">CC</option>
 `;
 
-function getQty(c){
+function getQty(code){
 
-  return parseInt(localStorage.getItem(c)) || 0;
+  return parseInt(localStorage.getItem(code)) || 0;
 
 }
 
-function setQty(c,q){
+function setQty(code,qty){
 
-  if(q <= 0){
+  if(qty <= 0){
 
-    localStorage.removeItem(c);
+    localStorage.removeItem(code);
 
   }else{
 
-    localStorage.setItem(c,q);
+    localStorage.setItem(code,qty);
 
   }
 
@@ -333,6 +336,7 @@ function setQty(c,q){
 function setMode(m){
 
   mode = m;
+
   render();
 
 }
@@ -343,38 +347,20 @@ function toggleTheme(){
 
 }
 
-function toggleLock(){
-
-  locked = !locked;
-
-  const btn = document.getElementById("lockBtn");
-
-  if(locked){
-
-    btn.textContent = "🔒 Travado";
-    btn.classList.add("locked");
-
-  }else{
-
-    btn.textContent = "🔓 Destravado";
-    btn.classList.remove("locked");
-
-  }
-
-}
-
 function resetAlbum(){
 
   if(confirm("Apagar tudo?")){
 
     localStorage.clear();
+
     render();
 
   }
 
 }
 
-function copyRepeated(){
+// EXPORTAR
+function exportData(){
 
   let lista = [];
 
@@ -382,81 +368,56 @@ function copyRepeated(){
 
     let qty = getQty(s.code);
 
-    if(qty > 1){
-
-      let nome = teams[s.team]?.name || s.team;
-
-      lista.push(`${s.code} (${nome}) - ${qty-1}x`);
-
-    }
-
-  });
-
-  if(!lista.length){
-
-    alert("Sem repetidas");
-    return;
-
-  }
-
-  navigator.clipboard.writeText(lista.join("\n"));
-
-  alert("Copiado!");
-
-}
-
-function exportAlbum(){
-
-  const data = {};
-
-  stickers.forEach(s=>{
-
-    const qty = getQty(s.code);
-
+    // SALVA SÓ AS QUE TEM
     if(qty > 0){
 
-      data[s.code] = qty;
+      lista.push(`${s.code}=${qty}`);
 
     }
 
   });
 
-  const code =
-  encodeURIComponent(JSON.stringify(data));
+  // COMPACTA
+  let codigo = btoa(lista.join("|"));
 
-  navigator.clipboard.writeText(code);
+  navigator.clipboard.writeText(codigo);
 
   alert("Código copiado!");
 
 }
 
-function importAlbum(){
+// IMPORTAR
+function importData(){
 
-  const code = prompt("Cole o código:");
+  let codigo = prompt("Cole o código:");
 
-  if(!code) return;
+  if(!codigo) return;
 
   try{
 
-    const data =
-    JSON.parse(decodeURIComponent(code));
+    let texto = atob(codigo);
 
     localStorage.clear();
 
-    Object.keys(data).forEach(key=>{
+    texto.split("|").forEach(item=>{
 
-      localStorage.setItem(key, data[key]);
+      let [code, qty] = item.split("=");
+
+      if(code && qty){
+
+        localStorage.setItem(code, qty);
+
+      }
 
     });
 
     render();
 
-    alert("Álbum importado!");
+    alert("Importado!");
 
-  }catch(e){
+  }catch{
 
-    alert("Código inválido!");
-    console.log(e);
+    alert("Código inválido");
 
   }
 
@@ -467,36 +428,49 @@ function render(){
   grid.innerHTML = "";
 
   let owned = 0;
+
   let repeated = 0;
 
   stickers.forEach(s=>{
 
     let qty = getQty(s.code);
 
-    if(filter.value !== "ALL" && s.team !== filter.value) return;
+    // FILTROS
+    if(
+      filter.value !== "ALL" &&
+      s.team !== filter.value
+    ) return;
 
-    if(mode === "repeat" && qty <= 1) return;
+    if(mode === "repeat" && qty <= 1)
+    return;
 
-    if(mode === "missing" && qty > 0) return;
+    if(mode === "missing" && qty > 0)
+    return;
 
     if(
       search.value &&
-      !s.code.toLowerCase().includes(
-        search.value.toLowerCase()
-      )
+      !s.code.toLowerCase()
+      .includes(search.value.toLowerCase())
     ) return;
 
     if(qty > 0) owned++;
 
-    if(qty > 1) repeated += qty - 1;
+    if(qty > 1)
+    repeated += qty - 1;
 
-    let div = document.createElement("div");
+    let div =
+    document.createElement("div");
 
     div.className =
-      "sticker " +
-      (qty===0 ? "none" : qty===1 ? "have" : "repeat");
+    "sticker " +
+    (
+      qty === 0 ? "none" :
+      qty === 1 ? "have" :
+      "repeat"
+    );
 
     div.innerHTML = `
+
       <div class="icon"></div>
 
       <div>${s.code}</div>
@@ -504,51 +478,61 @@ function render(){
       <div class="qty">${qty}</div>
 
       <div class="controls">
-        <button class="ctrl-btn minus">-</button>
-        <button class="ctrl-btn plus">+</button>
+
+        <button class="ctrl-btn minus">
+        -
+        </button>
+
+        <button class="ctrl-btn plus">
+        +
+        </button>
+
       </div>
+
     `;
 
-    let iconDiv = div.querySelector(".icon");
+    let iconDiv =
+    div.querySelector(".icon");
 
+    // FWC
     if(s.team === "FWC"){
 
       iconDiv.textContent = "⭐";
 
-    }else if(s.team === "CC"){
+    }
+
+    // CC
+    else if(s.team === "CC"){
 
       iconDiv.textContent = "🥤";
 
-    }else if(teams[s.team]){
+    }
 
-      let img = document.createElement("img");
+    // BANDEIRAS
+    else{
+
+      let img =
+      document.createElement("img");
 
       img.src =
       `https://flagcdn.com/w40/${teams[s.team].flag}.png`;
 
       img.className = "flag";
 
-      img.onerror = ()=>{
-
-        iconDiv.textContent = "🌍";
-
-      };
-
       iconDiv.appendChild(img);
-
-    }else{
-
-      iconDiv.textContent = "🌍";
 
     }
 
-    div.querySelector(".minus").onclick = ()=>{
-
-      if(locked) return;
+    // MENOS
+    div.querySelector(".minus")
+    .onclick = ()=>{
 
       if(qty > 0){
 
-        setQty(s.code, qty - 1);
+        setQty(
+          s.code,
+          qty - 1
+        );
 
         render();
 
@@ -556,11 +540,14 @@ function render(){
 
     };
 
-    div.querySelector(".plus").onclick = ()=>{
+    // MAIS
+    div.querySelector(".plus")
+    .onclick = ()=>{
 
-      if(locked) return;
-
-      setQty(s.code, qty + 1);
+      setQty(
+        s.code,
+        qty + 1
+      );
 
       render();
 
@@ -571,16 +558,26 @@ function render(){
   });
 
   let percent =
-  ((owned / stickers.length) * 100).toFixed(1);
+  (
+    (owned / stickers.length) * 100
+  ).toFixed(1);
 
   counter.innerHTML = `
-    ${owned} / ${stickers.length} (${percent}%)<br>
-    Repetidas: ${repeated}
+
+    ${owned} / ${stickers.length}
+    (${percent}%)
+
+    <br>
+
+    Repetidas:
+    ${repeated}
+
   `;
 
 }
 
 search.oninput = render;
+
 filter.onchange = render;
 
 render();
