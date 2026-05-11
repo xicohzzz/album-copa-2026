@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Controles de Figurinhas Copa 2026</title>
+<title>Controles de Figurinhas Copa do Mundo 2026</title>
 
 <style>
 
@@ -180,35 +180,17 @@ Controles de Figurinhas Copa do Mundo 2026
 
 <br>
 
-<button onclick="setMode('all')">
-Todas
-</button>
-
-<button onclick="setMode('repeat')">
-Repetidas
-</button>
-
-<button onclick="setMode('missing')">
-Faltando
-</button>
+<button onclick="setMode('all')">Todas</button>
+<button onclick="setMode('repeat')">Repetidas</button>
+<button onclick="setMode('missing')">Faltando</button>
 
 <br>
 
-<button onclick="toggleTheme()">
-Tema
-</button>
+<button onclick="toggleTheme()">Tema</button>
+<button onclick="resetAlbum()">Resetar</button>
 
-<button onclick="resetAlbum()">
-Resetar
-</button>
-
-<button onclick="exportData()">
-Exportar
-</button>
-
-<button onclick="importData()">
-Importar
-</button>
+<button onclick="exportData()">Exportar</button>
+<button onclick="importData()">Importar</button>
 
 <div class="counter" id="counter"></div>
 
@@ -222,35 +204,68 @@ Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀
 
 <script>
 
-// TIMES
+// TODOS OS PAÍSES
 const teams = {
 
-BRA:{name:"Brasil",flag:"br"},
-ARG:{name:"Argentina",flag:"ar"},
-FRA:{name:"França",flag:"fr"},
-GER:{name:"Alemanha",flag:"de"},
-ESP:{name:"Espanha",flag:"es"},
-POR:{name:"Portugal",flag:"pt"},
-ENG:{name:"Inglaterra",flag:"gb"},
-USA:{name:"Estados Unidos",flag:"us"},
-URU:{name:"Uruguai",flag:"uy"},
-CRO:{name:"Croácia",flag:"hr"},
 MEX:{name:"México",flag:"mx"},
-JPN:{name:"Japão",flag:"jp"},
+RSA:{name:"África do Sul",flag:"za"},
 KOR:{name:"Coreia do Sul",flag:"kr"},
-MAR:{name:"Marrocos",flag:"ma"},
-NED:{name:"Holanda",flag:"nl"},
-BEL:{name:"Bélgica",flag:"be"},
+CZE:{name:"República Tcheca",flag:"cz"},
+CAN:{name:"Canadá",flag:"ca"},
+BIH:{name:"Bósnia",flag:"ba"},
+QAT:{name:"Catar",flag:"qa"},
 SUI:{name:"Suíça",flag:"ch"},
-COL:{name:"Colômbia",flag:"co"},
+
+BRA:{name:"Brasil",flag:"br"},
+MAR:{name:"Marrocos",flag:"ma"},
+HAI:{name:"Haiti",flag:"ht"},
+SCO:{name:"Escócia",flag:"gb"},
+USA:{name:"Estados Unidos",flag:"us"},
 PAR:{name:"Paraguai",flag:"py"},
-AUS:{name:"Austrália",flag:"au"}
+AUS:{name:"Austrália",flag:"au"},
+TUR:{name:"Turquia",flag:"tr"},
+
+GER:{name:"Alemanha",flag:"de"},
+CUW:{name:"Curaçao",flag:"cw"},
+CIV:{name:"Costa do Marfim",flag:"ci"},
+ECU:{name:"Equador",flag:"ec"},
+NED:{name:"Holanda",flag:"nl"},
+JPN:{name:"Japão",flag:"jp"},
+SWE:{name:"Suécia",flag:"se"},
+TUN:{name:"Tunísia",flag:"tn"},
+
+BEL:{name:"Bélgica",flag:"be"},
+EGY:{name:"Egito",flag:"eg"},
+IRN:{name:"Irã",flag:"ir"},
+NZL:{name:"Nova Zelândia",flag:"nz"},
+ESP:{name:"Espanha",flag:"es"},
+CPV:{name:"Cabo Verde",flag:"cv"},
+KSA:{name:"Arábia Saudita",flag:"sa"},
+URU:{name:"Uruguai",flag:"uy"},
+
+FRA:{name:"França",flag:"fr"},
+SEN:{name:"Senegal",flag:"sn"},
+IRQ:{name:"Iraque",flag:"iq"},
+NOR:{name:"Noruega",flag:"no"},
+ARG:{name:"Argentina",flag:"ar"},
+ALG:{name:"Argélia",flag:"dz"},
+AUT:{name:"Áustria",flag:"at"},
+JOR:{name:"Jordânia",flag:"jo"},
+
+POR:{name:"Portugal",flag:"pt"},
+COD:{name:"Congo",flag:"cd"},
+UZB:{name:"Uzbequistão",flag:"uz"},
+COL:{name:"Colômbia",flag:"co"},
+ENG:{name:"Inglaterra",flag:"gb"},
+CRO:{name:"Croácia",flag:"hr"},
+GHA:{name:"Gana",flag:"gh"},
+PAN:{name:"Panamá",flag:"pa"}
 
 };
 
 let stickers = [];
 
-// FIGURINHAS DOS TIMES
+// TIMES
 Object.keys(teams).forEach(team=>{
 
   for(let i=1;i<=20;i++){
@@ -285,11 +300,8 @@ for(let i=1;i<=14;i++){
 }
 
 const grid = document.getElementById("grid");
-
 const counter = document.getElementById("counter");
-
 const filter = document.getElementById("filter");
-
 const search = document.getElementById("search");
 
 let mode = "all";
@@ -300,9 +312,7 @@ Object.keys(teams).forEach(t=>{
   let opt = document.createElement("option");
 
   opt.value = t;
-
-  opt.textContent =
-  `${t} (${teams[t].name})`;
+  opt.textContent = `${t} (${teams[t].name})`;
 
   filter.appendChild(opt);
 
@@ -336,7 +346,6 @@ function setQty(code,qty){
 function setMode(m){
 
   mode = m;
-
   render();
 
 }
@@ -352,7 +361,6 @@ function resetAlbum(){
   if(confirm("Apagar tudo?")){
 
     localStorage.clear();
-
     render();
 
   }
@@ -368,7 +376,7 @@ function exportData(){
 
     let qty = getQty(s.code);
 
-    // SALVA SÓ AS QUE TEM
+    // salva só quem tem
     if(qty > 0){
 
       lista.push(`${s.code}=${qty}`);
@@ -377,7 +385,6 @@ function exportData(){
 
   });
 
-  // COMPACTA
   let codigo = btoa(lista.join("|"));
 
   navigator.clipboard.writeText(codigo);
@@ -428,49 +435,36 @@ function render(){
   grid.innerHTML = "";
 
   let owned = 0;
-
   let repeated = 0;
 
   stickers.forEach(s=>{
 
     let qty = getQty(s.code);
 
-    // FILTROS
-    if(
-      filter.value !== "ALL" &&
-      s.team !== filter.value
-    ) return;
+    if(filter.value !== "ALL" && s.team !== filter.value) return;
 
-    if(mode === "repeat" && qty <= 1)
-    return;
+    if(mode === "repeat" && qty <= 1) return;
 
-    if(mode === "missing" && qty > 0)
-    return;
+    if(mode === "missing" && qty > 0) return;
 
-    if(
-      search.value &&
-      !s.code.toLowerCase()
-      .includes(search.value.toLowerCase())
-    ) return;
+    if(search.value &&
+      !s.code.toLowerCase().includes(search.value.toLowerCase())) return;
 
     if(qty > 0) owned++;
 
-    if(qty > 1)
-    repeated += qty - 1;
+    if(qty > 1) repeated += qty - 1;
 
-    let div =
-    document.createElement("div");
+    let div = document.createElement("div");
 
     div.className =
-    "sticker " +
-    (
-      qty === 0 ? "none" :
-      qty === 1 ? "have" :
-      "repeat"
-    );
+      "sticker " +
+      (
+        qty === 0 ? "none" :
+        qty === 1 ? "have" :
+        "repeat"
+      );
 
     div.innerHTML = `
-
       <div class="icon"></div>
 
       <div>${s.code}</div>
@@ -478,21 +472,12 @@ function render(){
       <div class="qty">${qty}</div>
 
       <div class="controls">
-
-        <button class="ctrl-btn minus">
-        -
-        </button>
-
-        <button class="ctrl-btn plus">
-        +
-        </button>
-
+        <button class="ctrl-btn minus">-</button>
+        <button class="ctrl-btn plus">+</button>
       </div>
-
     `;
 
-    let iconDiv =
-    div.querySelector(".icon");
+    let iconDiv = div.querySelector(".icon");
 
     // FWC
     if(s.team === "FWC"){
@@ -511,11 +496,9 @@ function render(){
     // BANDEIRAS
     else{
 
-      let img =
-      document.createElement("img");
+      let img = document.createElement("img");
 
-      img.src =
-      `https://flagcdn.com/w40/${teams[s.team].flag}.png`;
+      img.src = `https://flagcdn.com/w40/${teams[s.team].flag}.png`;
 
       img.className = "flag";
 
@@ -524,15 +507,11 @@ function render(){
     }
 
     // MENOS
-    div.querySelector(".minus")
-    .onclick = ()=>{
+    div.querySelector(".minus").onclick = ()=>{
 
       if(qty > 0){
 
-        setQty(
-          s.code,
-          qty - 1
-        );
+        setQty(s.code, qty - 1);
 
         render();
 
@@ -541,13 +520,9 @@ function render(){
     };
 
     // MAIS
-    div.querySelector(".plus")
-    .onclick = ()=>{
+    div.querySelector(".plus").onclick = ()=>{
 
-      setQty(
-        s.code,
-        qty + 1
-      );
+      setQty(s.code, qty + 1);
 
       render();
 
@@ -558,26 +533,18 @@ function render(){
   });
 
   let percent =
-  (
-    (owned / stickers.length) * 100
-  ).toFixed(1);
+  ((owned / stickers.length) * 100).toFixed(1);
 
   counter.innerHTML = `
-
     ${owned} / ${stickers.length}
     (${percent}%)
-
     <br>
-
-    Repetidas:
-    ${repeated}
-
+    Repetidas: ${repeated}
   `;
 
 }
 
 search.oninput = render;
-
 filter.onchange = render;
 
 render();
