@@ -3,553 +3,982 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Controles de Figurinhas Copa do Mundo 2026</title>
+<title>Figurinhas Copa 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-
-:root{
-  --bg:#ffffff;
-  --text:#111;
-  --card:#f5f5f5;
+:root {
+  --bg: #0a0f0a;
+  --surface: #111a11;
+  --card: #162016;
+  --border: #1e3a1e;
+  --accent: #39e75f;
+  --accent2: #ff6b35;
+  --gold: #ffd700;
+  --text: #e8f5e8;
+  --muted: #5a7a5a;
+  --red: #ff3d3d;
+  --green: #2ecc71;
+  --dark-green: #006400;
+  --radius: 12px;
 }
 
-.dark{
-  --bg:#121212;
-  --text:#ffffff;
-  --card:#1e1e1e;
+.light {
+  --bg: #f0f4f0;
+  --surface: #ffffff;
+  --card: #f8fcf8;
+  --border: #c8e0c8;
+  --accent: #1a8c35;
+  --accent2: #ff6b35;
+  --gold: #c8960c;
+  --text: #0d1a0d;
+  --muted: #6b896b;
+  --red: #cc2222;
+  --green: #1a8c35;
+  --dark-green: #005500;
+  --radius: 12px;
 }
 
-body{
-  margin:0;
-  font-family:Arial;
-  background:var(--bg);
-  color:var(--text);
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
 }
 
-header{
-  padding:20px;
-  text-align:center;
-  background:var(--card);
-  font-size:22px;
-  font-weight:bold;
+/* PITCH TEXTURE HEADER */
+header {
+  position: relative;
+  background: linear-gradient(135deg, #0d2b0d 0%, #0f3b0f 40%, #0a2a0a 100%);
+  padding: 28px 20px 24px;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 2px solid var(--accent);
 }
 
-.top{
-  text-align:center;
-  padding:15px;
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 38px,
+      rgba(255,255,255,0.025) 38px,
+      rgba(255,255,255,0.025) 40px
+    );
 }
 
-input,
-select{
-  width:220px;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  margin:5px;
+header::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.06);
+  pointer-events: none;
 }
 
-button{
-  padding:10px 14px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  margin:5px;
-  background:#333;
-  color:white;
-  font-weight:bold;
+.header-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 6vw, 52px);
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(57,231,95,0.4);
+  position: relative;
+  z-index: 1;
+  line-height: 1;
 }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
-  gap:10px;
-  padding:10px;
+.header-title span {
+  color: var(--accent);
 }
 
-.sticker{
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
-  position:relative;
-  overflow:hidden;
-  min-height:120px;
+.header-sub {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-top: 6px;
+  position: relative;
+  z-index: 1;
 }
 
-.none{
-  background:#ff4d4d;
-  color:white;
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.have{
-  background:#2ecc71;
-  color:white;
+.stat-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 18px;
+  min-width: 90px;
+  flex-shrink: 0;
 }
 
-.repeat{
-  background:#006400;
-  color:white;
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--accent);
 }
 
-.flag{
-  width:26px;
-  height:18px;
-  display:block;
-  margin:0 auto 5px;
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 600;
 }
 
-.icon{
-  margin-bottom:5px;
-  font-size:20px;
+/* PROGRESS BAR */
+.progress-wrap {
+  padding: 12px 16px 0;
+  background: var(--surface);
 }
 
-.qty{
-  font-size:12px;
-  margin-top:5px;
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
-.controls{
-  position:absolute;
-  bottom:6px;
-  left:0;
-  width:100%;
-  height:30px;
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 12px;
 }
 
-.ctrl-btn{
-  position:absolute;
-  background:none;
-  border:none;
-  font-size:24px;
-  font-weight:bold;
-  cursor:pointer;
-  color:#fff;
-  width:30px;
-  height:30px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:50;
-  text-shadow:0 0 5px #000;
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #7fff8a);
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
 }
 
-.minus{
-  left:5px;
+/* CONTROLS */
+.controls-section {
+  background: var(--surface);
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
 
-.plus{
-  right:5px;
+.search-wrap {
+  position: relative;
+  flex: 1;
+  min-width: 160px;
 }
 
-.counter{
-  margin-top:10px;
-  background:var(--card);
-  display:inline-block;
-  padding:12px;
-  border-radius:12px;
-  font-weight:bold;
+.search-wrap::before {
+  content: '⚽';
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  pointer-events: none;
 }
 
-.credit-bottom{
-  text-align:center;
-  margin:30px 0;
-  padding-top:15px;
-  border-top:1px solid rgba(0,0,0,0.1);
-  font-size:13px;
-  opacity:0.7;
+input[type="text"] {
+  width: 100%;
+  padding: 9px 12px 9px 34px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
+input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+select {
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.btn-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  background: var(--card);
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--border);
+}
+
+.btn.active {
+  background: var(--accent);
+  color: #0a0f0a;
+  border-color: var(--accent);
+}
+
+.btn-lock {
+  background: var(--card);
+  border-color: var(--border);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-lock.locked {
+  background: var(--accent2);
+  border-color: var(--accent2);
+  color: #fff;
+  animation: lockPulse 0.3s ease;
+}
+
+@keyframes lockPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+.btn-theme {
+  font-size: 16px;
+  padding: 8px 11px;
+}
+
+.btn-reset {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.btn-reset:hover {
+  background: var(--red);
+  color: #fff;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(94px, 1fr));
+  gap: 8px;
+  padding: 14px;
+}
+
+/* STICKER CARD */
+.sticker {
+  border-radius: var(--radius);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 10px 6px 38px;
+  min-height: 108px;
+  border: 1px solid transparent;
+  transition: transform 0.15s, box-shadow 0.15s;
+  cursor: default;
+  animation: fadeIn 0.2s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.sticker:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.sticker.none {
+  background: linear-gradient(145deg, #2a0f0f, #3a1010);
+  border-color: #5a1a1a;
+}
+
+.sticker.have {
+  background: linear-gradient(145deg, #0f2d18, #143d1e);
+  border-color: #1e5a2e;
+}
+
+.sticker.repeat {
+  background: linear-gradient(145deg, #0a2a14, #0d3a1a);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(57,231,95,0.15);
+}
+
+.light .sticker.none {
+  background: linear-gradient(145deg, #ffe5e5, #ffd0d0);
+  border-color: #ffaaaa;
+}
+
+.light .sticker.have {
+  background: linear-gradient(145deg, #e8f8ee, #d5f2e0);
+  border-color: #90cc9f;
+}
+
+.light .sticker.repeat {
+  background: linear-gradient(145deg, #d5f2e0, #c0efd0);
+  border-color: var(--accent);
+}
+
+/* REPEAT BADGE */
+.sticker.repeat::before {
+  content: '×' attr(data-repeat);
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: var(--accent);
+  color: #0a0f0a;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+/* FLAG / ICON */
+.icon-wrap {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.flag {
+  width: 28px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 3px;
+  display: block;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+}
+
+.special-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* CODE */
+.sticker-code {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #fff;
+  line-height: 1.2;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.light .sticker-code {
+  color: var(--text);
+  text-shadow: none;
+}
+
+/* QTY */
+.qty {
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+.light .qty { color: var(--muted); }
+
+/* CONTROLS */
+.btn-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 34px;
+  display: flex;
+  background: rgba(0,0,0,0.25);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.light .btn-controls {
+  background: rgba(0,0,0,0.06);
+  border-top: 1px solid rgba(0,0,0,0.08);
+}
+
+.ctrl-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  color: rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s;
+  line-height: 1;
+}
+
+.light .ctrl-btn { color: var(--text); }
+
+.ctrl-btn:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.ctrl-btn:disabled,
+.locked .ctrl-btn {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ctrl-divider {
+  width: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 6px 0;
+}
+
+/* EMPTY STATE */
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.empty-icon { font-size: 48px; margin-bottom: 12px; }
+
+.empty-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* LOCKED OVERLAY NOTICE */
+.lock-notice {
+  display: none;
+  background: var(--accent2);
+  color: #fff;
+  text-align: center;
+  padding: 8px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.lock-notice.show { display: block; }
+
+/* SECTION LABELS */
+.section-label {
+  grid-column: 1/-1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--muted);
+  padding: 6px 2px 2px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 30px 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+  font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 1px;
+}
+
+footer strong { color: var(--text); }
+
+/* MODAL / TOAST */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--accent);
+  color: #0a0f0a;
+  padding: 10px 22px;
+  border-radius: 99px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+/* RESPONSIVE */
+@media(max-width:480px) {
+  .grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; padding: 10px; }
+  .controls-section { padding: 10px; }
+  .stats-bar { padding: 10px; }
+  .stat-pill { min-width: 70px; padding: 8px 12px; }
+  .stat-value { font-size: 22px; }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-Controles de Figurinhas Copa do Mundo 2026
+  <div class="header-title">Copa do Mundo <span>2026</span></div>
+  <div class="header-sub">Controle de Figurinhas</div>
 </header>
 
-<div class="top">
+<div class="stats-bar" id="statsBar">
+  <div class="stat-pill">
+    <div class="stat-value" id="statOwned">0</div>
+    <div class="stat-label">Coladas</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-value" id="statMissing">0</div>
+    <div class="stat-label">Faltando</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-value" id="statRepeat">0</div>
+    <div class="stat-label">Repetidas</div>
+  </div>
+  <div class="stat-pill">
+    <div class="stat-value" id="statPercent">0%</div>
+    <div class="stat-label">Completo</div>
+  </div>
+</div>
 
-<input type="text" id="search" placeholder="Buscar figurinha...">
+<div class="progress-wrap">
+  <div class="progress-label">
+    <span>Progresso do álbum</span>
+    <span id="progressText">0 / 0</span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
 
-<br>
+<div class="lock-notice" id="lockNotice">🔒 Álbum travado — edição desabilitada</div>
 
-<select id="filter">
-<option value="ALL">Todas</option>
-</select>
+<div class="controls-section">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Buscar figurinha...">
+  </div>
 
-<br>
+  <select id="filter">
+    <option value="ALL">Todos os grupos</option>
+  </select>
 
-<button onclick="setMode('all')">Todas</button>
-<button onclick="setMode('repeat')">Repetidas</button>
-<button onclick="setMode('missing')">Faltando</button>
+  <div class="btn-group">
+    <button class="btn active" id="btnAll"   onclick="setMode('all')">Todas</button>
+    <button class="btn"        id="btnRepeat" onclick="setMode('repeat')">Repetidas</button>
+    <button class="btn"        id="btnMiss"  onclick="setMode('missing')">Faltando</button>
+  </div>
 
-<br>
-
-<button onclick="toggleTheme()">Tema</button>
-<button onclick="resetAlbum()">Resetar</button>
-
-<button onclick="exportData()">Exportar</button>
-<button onclick="importData()">Importar</button>
-
-<div class="counter" id="counter"></div>
-
+  <div class="btn-group">
+    <button class="btn btn-lock" id="btnLock" onclick="toggleLock()">🔓 Travar</button>
+    <button class="btn btn-theme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
+    <button class="btn btn-reset" onclick="resetAlbum()">⚠ Resetar</button>
+  </div>
 </div>
 
 <div class="grid" id="grid"></div>
 
-<div class="credit-bottom">
-Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀
-</div>
+<footer>Desenvolvido por <strong>Gabriel Yamashita</strong> 🚀</footer>
+
+<div class="toast" id="toast"></div>
 
 <script>
-
-// TODOS OS PAÍSES
+// ─── DATA ────────────────────────────────────────────────────────────────────
 const teams = {
+  MEX:{name:"México",flag:"mx"},
+  RSA:{name:"África do Sul",flag:"za"},
+  KOR:{name:"Coreia do Sul",flag:"kr"},
+  CZE:{name:"República Tcheca",flag:"cz"},
+  CAN:{name:"Canadá",flag:"ca"},
+  BIH:{name:"Bósnia",flag:"ba"},
+  QAT:{name:"Catar",flag:"qa"},
+  SUI:{name:"Suíça",flag:"ch"},
 
-MEX:{name:"México",flag:"mx"},
-RSA:{name:"África do Sul",flag:"za"},
-KOR:{name:"Coreia do Sul",flag:"kr"},
-CZE:{name:"República Tcheca",flag:"cz"},
-CAN:{name:"Canadá",flag:"ca"},
-BIH:{name:"Bósnia",flag:"ba"},
-QAT:{name:"Catar",flag:"qa"},
-SUI:{name:"Suíça",flag:"ch"},
+  BRA:{name:"Brasil",flag:"br"},
+  MAR:{name:"Marrocos",flag:"ma"},
+  HAI:{name:"Haiti",flag:"ht"},
+  SCO:{name:"Escócia",flag:"gb-sct"},
+  USA:{name:"Estados Unidos",flag:"us"},
+  PAR:{name:"Paraguai",flag:"py"},
+  AUS:{name:"Austrália",flag:"au"},
+  TUR:{name:"Turquia",flag:"tr"},
 
-BRA:{name:"Brasil",flag:"br"},
-MAR:{name:"Marrocos",flag:"ma"},
-HAI:{name:"Haiti",flag:"ht"},
-SCO:{name:"Escócia",flag:"gb"},
-USA:{name:"Estados Unidos",flag:"us"},
-PAR:{name:"Paraguai",flag:"py"},
-AUS:{name:"Austrália",flag:"au"},
-TUR:{name:"Turquia",flag:"tr"},
+  GER:{name:"Alemanha",flag:"de"},
+  CUW:{name:"Curaçao",flag:"cw"},
+  CIV:{name:"Costa do Marfim",flag:"ci"},
+  ECU:{name:"Equador",flag:"ec"},
+  NED:{name:"Holanda",flag:"nl"},
+  JPN:{name:"Japão",flag:"jp"},
+  SWE:{name:"Suécia",flag:"se"},
+  TUN:{name:"Tunísia",flag:"tn"},
 
-GER:{name:"Alemanha",flag:"de"},
-CUW:{name:"Curaçao",flag:"cw"},
-CIV:{name:"Costa do Marfim",flag:"ci"},
-ECU:{name:"Equador",flag:"ec"},
-NED:{name:"Holanda",flag:"nl"},
-JPN:{name:"Japão",flag:"jp"},
-SWE:{name:"Suécia",flag:"se"},
-TUN:{name:"Tunísia",flag:"tn"},
+  BEL:{name:"Bélgica",flag:"be"},
+  EGY:{name:"Egito",flag:"eg"},
+  IRN:{name:"Irã",flag:"ir"},
+  NZL:{name:"Nova Zelândia",flag:"nz"},
+  ESP:{name:"Espanha",flag:"es"},
+  CPV:{name:"Cabo Verde",flag:"cv"},
+  KSA:{name:"Arábia Saudita",flag:"sa"},
+  URU:{name:"Uruguai",flag:"uy"},
 
-BEL:{name:"Bélgica",flag:"be"},
-EGY:{name:"Egito",flag:"eg"},
-IRN:{name:"Irã",flag:"ir"},
-NZL:{name:"Nova Zelândia",flag:"nz"},
-ESP:{name:"Espanha",flag:"es"},
-CPV:{name:"Cabo Verde",flag:"cv"},
-KSA:{name:"Arábia Saudita",flag:"sa"},
-URU:{name:"Uruguai",flag:"uy"},
+  FRA:{name:"França",flag:"fr"},
+  SEN:{name:"Senegal",flag:"sn"},
+  IRQ:{name:"Iraque",flag:"iq"},
+  NOR:{name:"Noruega",flag:"no"},
+  ARG:{name:"Argentina",flag:"ar"},
+  ALG:{name:"Argélia",flag:"dz"},
+  AUT:{name:"Áustria",flag:"at"},
+  JOR:{name:"Jordânia",flag:"jo"},
 
-FRA:{name:"França",flag:"fr"},
-SEN:{name:"Senegal",flag:"sn"},
-IRQ:{name:"Iraque",flag:"iq"},
-NOR:{name:"Noruega",flag:"no"},
-ARG:{name:"Argentina",flag:"ar"},
-ALG:{name:"Argélia",flag:"dz"},
-AUT:{name:"Áustria",flag:"at"},
-JOR:{name:"Jordânia",flag:"jo"},
-
-POR:{name:"Portugal",flag:"pt"},
-COD:{name:"Congo",flag:"cd"},
-UZB:{name:"Uzbequistão",flag:"uz"},
-COL:{name:"Colômbia",flag:"co"},
-ENG:{name:"Inglaterra",flag:"gb"},
-CRO:{name:"Croácia",flag:"hr"},
-GHA:{name:"Gana",flag:"gh"},
-PAN:{name:"Panamá",flag:"pa"}
-
+  POR:{name:"Portugal",flag:"pt"},
+  COD:{name:"Congo",flag:"cd"},
+  UZB:{name:"Uzbequistão",flag:"uz"},
+  COL:{name:"Colômbia",flag:"co"},
+  ENG:{name:"Inglaterra",flag:"gb-eng"},
+  CRO:{name:"Croácia",flag:"hr"},
+  GHA:{name:"Gana",flag:"gh"},
+  PAN:{name:"Panamá",flag:"pa"}
 };
 
+// Build sticker list
 let stickers = [];
 
-// TIMES
-Object.keys(teams).forEach(team=>{
-
-  for(let i=1;i<=20;i++){
-
-    stickers.push({
-      code:`${team} ${i}`,
-      team:team
-    });
-
+Object.keys(teams).forEach(team => {
+  for (let i = 1; i <= 20; i++) {
+    stickers.push({ code: `${team} ${i}`, team, type: 'team' });
   }
-
 });
 
-// FWC
-for(let i=0;i<=19;i++){
-
-  stickers.push({
-    code:`FWC ${i.toString().padStart(2,'0')}`,
-    team:"FWC"
-  });
-
+for (let i = 0; i <= 19; i++) {
+  stickers.push({ code: `FWC ${i.toString().padStart(2,'0')}`, team: 'FWC', type: 'special' });
 }
 
-// CC
-for(let i=1;i<=14;i++){
-
-  stickers.push({
-    code:`CC${i}`,
-    team:"CC"
-  });
-
+for (let i = 1; i <= 14; i++) {
+  stickers.push({ code: `CC${i}`, team: 'CC', type: 'special' });
 }
 
-const grid = document.getElementById("grid");
-const counter = document.getElementById("counter");
-const filter = document.getElementById("filter");
-const search = document.getElementById("search");
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let mode    = 'all';
+let locked  = false;
+let isDark  = true;
 
-let mode = "all";
+// ─── DOM REFS ────────────────────────────────────────────────────────────────
+const grid        = document.getElementById('grid');
+const filter      = document.getElementById('filter');
+const search      = document.getElementById('search');
+const btnLock     = document.getElementById('btnLock');
+const lockNotice  = document.getElementById('lockNotice');
+const progressFill= document.getElementById('progressFill');
+const progressText= document.getElementById('progressText');
 
-// FILTROS
-Object.keys(teams).forEach(t=>{
-
-  let opt = document.createElement("option");
-
+// ─── FILTER OPTIONS ──────────────────────────────────────────────────────────
+Object.keys(teams).forEach(t => {
+  const opt = document.createElement('option');
   opt.value = t;
-  opt.textContent = `${t} (${teams[t].name})`;
-
+  opt.textContent = `${t} — ${teams[t].name}`;
   filter.appendChild(opt);
-
 });
 
-filter.innerHTML += `
-<option value="FWC">FWC</option>
-<option value="CC">CC</option>
-`;
+['FWC', 'CC'].forEach(t => {
+  const opt = document.createElement('option');
+  opt.value = t;
+  opt.textContent = t === 'FWC' ? 'FWC — Copa do Mundo' : 'CC — Coca-Cola';
+  filter.appendChild(opt);
+});
 
-function getQty(code){
-
-  return parseInt(localStorage.getItem(code)) || 0;
-
+// ─── STORAGE ─────────────────────────────────────────────────────────────────
+function getQty(code)      { return parseInt(localStorage.getItem(code)) || 0; }
+function setQty(code, qty) {
+  if (qty <= 0) localStorage.removeItem(code);
+  else          localStorage.setItem(code, qty);
 }
 
-function setQty(code,qty){
-
-  if(qty <= 0){
-
-    localStorage.removeItem(code);
-
-  }else{
-
-    localStorage.setItem(code,qty);
-
-  }
-
+// ─── LOCK ────────────────────────────────────────────────────────────────────
+function toggleLock() {
+  locked = !locked;
+  btnLock.textContent = locked ? '🔒 Travado' : '🔓 Travar';
+  btnLock.classList.toggle('locked', locked);
+  lockNotice.classList.toggle('show', locked);
+  showToast(locked ? '🔒 Álbum travado!' : '🔓 Álbum desbloqueado!');
+  // Só atualiza estado dos botões sem reconstruir o grid
+  grid.querySelectorAll('.sticker').forEach(div => {
+    const isLocked = locked;
+    div.querySelectorAll('.ctrl-btn').forEach(b => b.disabled = isLocked);
+  });
 }
 
-function setMode(m){
+// ─── THEME ───────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  isDark = !isDark;
+  document.body.classList.toggle('light', !isDark);
+  document.querySelector('.btn-theme').textContent = isDark ? '☀️' : '🌙';
+}
 
+// ─── MODE BUTTONS ────────────────────────────────────────────────────────────
+function setMode(m) {
   mode = m;
-  render();
-
+  document.getElementById('btnAll').classList.toggle('active',    m === 'all');
+  document.getElementById('btnRepeat').classList.toggle('active', m === 'repeat');
+  document.getElementById('btnMiss').classList.toggle('active',   m === 'missing');
+  buildGrid(); // filtro mudou: reconstrói
 }
 
-function toggleTheme(){
-
-  document.body.classList.toggle("dark");
-
-}
-
-function resetAlbum(){
-
-  if(confirm("Apagar tudo?")){
-
+// ─── RESET ───────────────────────────────────────────────────────────────────
+function resetAlbum() {
+  if (confirm('Isso vai apagar todos os seus dados. Tem certeza?')) {
     localStorage.clear();
-    render();
+    showToast('✅ Álbum resetado!');
+    buildGrid();
+  }
+}
 
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── ATUALIZA STATS (sem mexer no grid) ──────────────────────────────────────
+function updateStats() {
+  let totalOwned  = 0;
+  let totalRepeat = 0;
+
+  stickers.forEach(s => {
+    const qty = getQty(s.code);
+    if (qty > 0) totalOwned++;
+    if (qty > 1) totalRepeat += qty - 1;
+  });
+
+  const totalMissing = stickers.length - totalOwned;
+  const pct = ((totalOwned / stickers.length) * 100).toFixed(1);
+
+  document.getElementById('statOwned').textContent   = totalOwned;
+  document.getElementById('statMissing').textContent = totalMissing;
+  document.getElementById('statRepeat').textContent  = totalRepeat;
+  document.getElementById('statPercent').textContent = pct + '%';
+  progressFill.style.width = pct + '%';
+  progressText.textContent = `${totalOwned} / ${stickers.length}`;
+}
+
+// ─── ATUALIZA SÓ UM CARD (sem reconstruir o grid) ────────────────────────────
+function updateCard(div, s, qty) {
+  // Troca a classe de cor
+  div.classList.remove('none', 'have', 'repeat');
+  div.classList.add(qty === 0 ? 'none' : qty === 1 ? 'have' : 'repeat');
+
+  // Badge de repetição
+  if (qty > 1) div.setAttribute('data-repeat', qty);
+  else         div.removeAttribute('data-repeat');
+
+  // Texto de quantidade
+  const qtyLabel = qty === 0 ? 'Faltando' : qty === 1 ? '1 unidade' : `${qty} unidades`;
+  div.querySelector('.qty').textContent = qtyLabel;
+}
+
+// ─── CONSTRÓI O GRID DO ZERO (chamado ao trocar filtro/busca/modo/reset) ─────
+function buildGrid() {
+  grid.innerHTML = '';
+  updateStats();
+
+  const filterVal = filter.value;
+  const searchVal = search.value.trim().toLowerCase();
+
+  const visible = stickers.filter(s => {
+    const qty = getQty(s.code);
+    if (filterVal !== 'ALL' && s.team !== filterVal) return false;
+    if (mode === 'repeat'  && qty <= 1) return false;
+    if (mode === 'missing' && qty > 0)  return false;
+    if (searchVal && !s.code.toLowerCase().includes(searchVal)) return false;
+    return true;
+  });
+
+  if (visible.length === 0) {
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">Nenhuma figurinha encontrada</div>
+      </div>`;
+    return;
   }
 
-}
+  visible.forEach((s, idx) => {
+    const qty = getQty(s.code);
+    const div = document.createElement('div');
 
-// EXPORTAR
-function exportData(){
+    div.className = 'sticker ' + (qty === 0 ? 'none' : qty === 1 ? 'have' : 'repeat');
+    div.dataset.code = s.code;
+    if (qty > 1) div.setAttribute('data-repeat', qty);
 
-  let lista = [];
-
-  stickers.forEach(s=>{
-
-    let qty = getQty(s.code);
-
-    // salva só quem tem
-    if(qty > 0){
-
-      lista.push(`${s.code}=${qty}`);
-
+    // Ícone / bandeira
+    let iconHTML = '';
+    if (s.team === 'FWC') {
+      iconHTML = `<span class="special-icon">⭐</span>`;
+    } else if (s.team === 'CC') {
+      iconHTML = `<span class="special-icon">🥤</span>`;
+    } else {
+      iconHTML = `<img class="flag" src="https://flagcdn.com/w40/${teams[s.team].flag}.png" alt="${teams[s.team].name}" loading="lazy">`;
     }
 
-  });
-
-  let codigo = btoa(lista.join("|"));
-
-  navigator.clipboard.writeText(codigo);
-
-  alert("Código copiado!");
-
-}
-
-// IMPORTAR
-function importData(){
-
-  let codigo = prompt("Cole o código:");
-
-  if(!codigo) return;
-
-  try{
-
-    let texto = atob(codigo);
-
-    localStorage.clear();
-
-    texto.split("|").forEach(item=>{
-
-      let [code, qty] = item.split("=");
-
-      if(code && qty){
-
-        localStorage.setItem(code, qty);
-
-      }
-
-    });
-
-    render();
-
-    alert("Importado!");
-
-  }catch{
-
-    alert("Código inválido");
-
-  }
-
-}
-
-function render(){
-
-  grid.innerHTML = "";
-
-  let owned = 0;
-  let repeated = 0;
-
-  stickers.forEach(s=>{
-
-    let qty = getQty(s.code);
-
-    if(filter.value !== "ALL" && s.team !== filter.value) return;
-
-    if(mode === "repeat" && qty <= 1) return;
-
-    if(mode === "missing" && qty > 0) return;
-
-    if(search.value &&
-      !s.code.toLowerCase().includes(search.value.toLowerCase())) return;
-
-    if(qty > 0) owned++;
-
-    if(qty > 1) repeated += qty - 1;
-
-    let div = document.createElement("div");
-
-    div.className =
-      "sticker " +
-      (
-        qty === 0 ? "none" :
-        qty === 1 ? "have" :
-        "repeat"
-      );
+    const qtyLabel = qty === 0 ? 'Faltando' : qty === 1 ? '1 unidade' : `${qty} unidades`;
 
     div.innerHTML = `
-      <div class="icon"></div>
-
-      <div>${s.code}</div>
-
-      <div class="qty">${qty}</div>
-
-      <div class="controls">
-        <button class="ctrl-btn minus">-</button>
-        <button class="ctrl-btn plus">+</button>
+      <div class="icon-wrap">${iconHTML}</div>
+      <div class="sticker-code">${s.code}</div>
+      <div class="qty">${qtyLabel}</div>
+      <div class="btn-controls">
+        <button class="ctrl-btn minus" aria-label="Remover">−</button>
+        <div class="ctrl-divider"></div>
+        <button class="ctrl-btn plus"  aria-label="Adicionar">+</button>
       </div>
     `;
 
-    let iconDiv = div.querySelector(".icon");
+    div.style.animationDelay = Math.min(idx * 6, 300) + 'ms';
 
-    // FWC
-    if(s.team === "FWC"){
+    const minusBtn = div.querySelector('.minus');
+    const plusBtn  = div.querySelector('.plus');
 
-      iconDiv.textContent = "⭐";
+    minusBtn.disabled = locked;
+    plusBtn.disabled  = locked;
 
-    }
+    // ── CLIQUE MINUS ── atualiza só este card, sem reconstruir o grid
+    minusBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (locked) return;
+      let q = getQty(s.code);
+      if (q <= 0) return;
+      q--;
+      setQty(s.code, q);
+      updateStats();
 
-    // CC
-    else if(s.team === "CC"){
+      // Se o modo atual esconderia este card agora, remove com fade
+      const shouldHide =
+        (mode === 'missing' && q > 0) ||
+        (mode === 'repeat'  && q <= 1);
 
-      iconDiv.textContent = "🥤";
-
-    }
-
-    // BANDEIRAS
-    else{
-
-      let img = document.createElement("img");
-
-      img.src = `https://flagcdn.com/w40/${teams[s.team].flag}.png`;
-
-      img.className = "flag";
-
-      iconDiv.appendChild(img);
-
-    }
-
-    // MENOS
-    div.querySelector(".minus").onclick = ()=>{
-
-      if(qty > 0){
-
-        setQty(s.code, qty - 1);
-
-        render();
-
+      if (shouldHide) {
+        div.style.transition = 'opacity 0.2s, transform 0.2s';
+        div.style.opacity = '0';
+        div.style.transform = 'scale(0.85)';
+        setTimeout(() => div.remove(), 210);
+      } else {
+        updateCard(div, s, q);
       }
+    });
 
-    };
+    // ── CLIQUE PLUS ── atualiza só este card, sem reconstruir o grid
+    plusBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (locked) return;
+      let q = getQty(s.code) + 1;
+      setQty(s.code, q);
+      updateStats();
 
-    // MAIS
-    div.querySelector(".plus").onclick = ()=>{
+      // Se o modo atual esconderia este card agora (ex: modo "faltando"), remove
+      const shouldHide = (mode === 'missing' && q > 0);
 
-      setQty(s.code, qty + 1);
-
-      render();
-
-    };
+      if (shouldHide) {
+        div.style.transition = 'opacity 0.2s, transform 0.2s';
+        div.style.opacity = '0';
+        div.style.transform = 'scale(0.85)';
+        setTimeout(() => div.remove(), 210);
+      } else {
+        updateCard(div, s, q);
+      }
+    });
 
     grid.appendChild(div);
-
   });
-
-  let percent =
-  ((owned / stickers.length) * 100).toFixed(1);
-
-  counter.innerHTML = `
-    ${owned} / ${stickers.length}
-    (${percent}%)
-    <br>
-    Repetidas: ${repeated}
-  `;
-
 }
 
-search.oninput = render;
-filter.onchange = render;
+// ─── EVENTOS ─────────────────────────────────────────────────────────────────
+search.addEventListener('input', buildGrid);
+filter.addEventListener('change', buildGrid);
 
-render();
-
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildGrid();
 </script>
-
 </body>
 </html>
