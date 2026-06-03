@@ -306,6 +306,15 @@ select {
   padding: 8px 11px;
 }
 
+.btn-copy {
+  border-color: #4a9eff;
+  color: #4a9eff;
+}
+.btn-copy:hover {
+  background: #4a9eff;
+  color: #fff;
+}
+
 .btn-reset {
   border-color: var(--red);
   color: var(--red);
@@ -650,6 +659,7 @@ footer strong { color: var(--text); }
 
   <div class="btn-group">
     <button class="btn btn-lock" id="btnLock" onclick="toggleLock()">🔓 Travar</button>
+    <button class="btn btn-copy" onclick="copyMissing()" title="Copiar lista de faltando">📋 Faltando</button>
     <button class="btn btn-theme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
     <button class="btn btn-reset" onclick="resetAlbum()">⚠ Resetar</button>
   </div>
@@ -663,6 +673,16 @@ footer strong { color: var(--text); }
 
 <script>
 // ─── DATA ────────────────────────────────────────────────────────────────────
+const teamEmoji = {
+  MEX:"🇲🇽",RSA:"🇿🇦",KOR:"🇰🇷",CZE:"🇨🇿",CAN:"🇨🇦",BIH:"🇧🇦",QAT:"🇶🇦",SUI:"🇨🇭",
+  BRA:"🇧🇷",MAR:"🇲🇦",HAI:"🇭🇹",SCO:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",USA:"🇺🇸",PAR:"🇵🇾",AUS:"🇦🇺",TUR:"🇹🇷",
+  GER:"🇩🇪",CUW:"🇨🇼",CIV:"🇨🇮",ECU:"🇪🇨",NED:"🇳🇱",JPN:"🇯🇵",SWE:"🇸🇪",TUN:"🇹🇳",
+  BEL:"🇧🇪",EGY:"🇪🇬",IRN:"🇮🇷",NZL:"🇳🇿",ESP:"🇪🇸",CPV:"🇨🇻",KSA:"🇸🇦",URU:"🇺🇾",
+  FRA:"🇫🇷",SEN:"🇸🇳",IRQ:"🇮🇶",NOR:"🇳🇴",ARG:"🇦🇷",ALG:"🇩🇿",AUT:"🇦🇹",JOR:"🇯🇴",
+  POR:"🇵🇹",COD:"🇨🇩",UZB:"🇺🇿",COL:"🇨🇴",ENG:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",CRO:"🇭🇷",GHA:"🇬🇭",PAN:"🇵🇦",
+  FWC:"⭐",CC:"🥤"
+};
+
 const teams = {
   MEX:{name:"México",flag:"mx"},
   RSA:{name:"África do Sul",flag:"za"},
@@ -971,6 +991,62 @@ function buildGrid() {
 
     grid.appendChild(div);
   });
+}
+
+// ─── COPIAR FALTANDO ─────────────────────────────────────────────────────────
+function copyMissing() {
+  // Agrupa faltando por time
+  const missing = {};
+
+  stickers.forEach(s => {
+    if (getQty(s.code) === 0) {
+      if (!missing[s.team]) missing[s.team] = [];
+      // Pega só o número/id da figurinha
+      const num = s.code.replace(s.team, '').trim();
+      missing[s.team].push(num);
+    }
+  });
+
+  if (Object.keys(missing).length === 0) {
+    showToast('🏆 Álbum completo! Nada faltando!');
+    return;
+  }
+
+  const lines = [];
+
+  // Preserva a ordem original dos times
+  const teamOrder = [...Object.keys(teams), 'FWC', 'CC'];
+
+  teamOrder.forEach(team => {
+    if (!missing[team]) return;
+    const emoji = teamEmoji[team] || '';
+    const name  = teams[team] ? teams[team].name : team;
+    const nums  = missing[team].join(', ');
+    lines.push(`${team} ${emoji}: ${nums}`);
+  });
+
+  const text = lines.join('\n');
+
+  // Copia pro clipboard com fallback
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('📋 Lista copiada!'))
+      .catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  showToast('📋 Lista copiada!');
 }
 
 // ─── EVENTOS ─────────────────────────────────────────────────────────────────
