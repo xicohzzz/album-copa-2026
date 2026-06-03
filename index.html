@@ -315,6 +315,15 @@ select {
   color: #fff;
 }
 
+.btn-copy2 {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-copy2:hover {
+  background: var(--accent);
+  color: #0a0f0a;
+}
+
 .btn-reset {
   border-color: var(--red);
   color: var(--red);
@@ -660,6 +669,7 @@ footer strong { color: var(--text); }
   <div class="btn-group">
     <button class="btn btn-lock" id="btnLock" onclick="toggleLock()">🔓 Travar</button>
     <button class="btn btn-copy" onclick="copyMissing()" title="Copiar lista de faltando">📋 Faltando</button>
+    <button class="btn btn-copy2" onclick="copyRepeated()" title="Copiar lista de repetidas">📋 Repetidas</button>
     <button class="btn btn-theme" onclick="toggleTheme()" title="Alternar tema">☀️</button>
     <button class="btn btn-reset" onclick="resetAlbum()">⚠ Resetar</button>
   </div>
@@ -675,11 +685,11 @@ footer strong { color: var(--text); }
 // ─── DATA ────────────────────────────────────────────────────────────────────
 const teamEmoji = {
   MEX:"🇲🇽",RSA:"🇿🇦",KOR:"🇰🇷",CZE:"🇨🇿",CAN:"🇨🇦",BIH:"🇧🇦",QAT:"🇶🇦",SUI:"🇨🇭",
-  BRA:"🇧🇷",MAR:"🇲🇦",HAI:"🇭🇹",SCO:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",USA:"🇺🇸",PAR:"🇵🇾",AUS:"🇦🇺",TUR:"🇹🇷",
+  BRA:"🇧🇷",MAR:"🇲🇦",HAI:"🇭🇹",SCO:"🇬🇧",USA:"🇺🇸",PAR:"🇵🇾",AUS:"🇦🇺",TUR:"🇹🇷",
   GER:"🇩🇪",CUW:"🇨🇼",CIV:"🇨🇮",ECU:"🇪🇨",NED:"🇳🇱",JPN:"🇯🇵",SWE:"🇸🇪",TUN:"🇹🇳",
   BEL:"🇧🇪",EGY:"🇪🇬",IRN:"🇮🇷",NZL:"🇳🇿",ESP:"🇪🇸",CPV:"🇨🇻",KSA:"🇸🇦",URU:"🇺🇾",
   FRA:"🇫🇷",SEN:"🇸🇳",IRQ:"🇮🇶",NOR:"🇳🇴",ARG:"🇦🇷",ALG:"🇩🇿",AUT:"🇦🇹",JOR:"🇯🇴",
-  POR:"🇵🇹",COD:"🇨🇩",UZB:"🇺🇿",COL:"🇨🇴",ENG:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",CRO:"🇭🇷",GHA:"🇬🇭",PAN:"🇵🇦",
+  POR:"🇵🇹",COD:"🇨🇩",UZB:"🇺🇿",COL:"🇨🇴",ENG:"🇬🇧",CRO:"🇭🇷",GHA:"🇬🇭",PAN:"🇵🇦",
   FWC:"⭐",CC:"🥤"
 };
 
@@ -991,6 +1001,46 @@ function buildGrid() {
 
     grid.appendChild(div);
   });
+}
+
+// ─── COPIAR REPETIDAS ────────────────────────────────────────────────────────
+function copyRepeated() {
+  const repeated = {};
+
+  stickers.forEach(s => {
+    const qty = getQty(s.code);
+    if (qty > 1) {
+      if (!repeated[s.team]) repeated[s.team] = [];
+      const num = s.code.replace(s.team, '').trim();
+      // mostra quantas repetidas tem (qty - 1)
+      repeated[s.team].push(`${num}x${qty - 1}`);
+    }
+  });
+
+  if (Object.keys(repeated).length === 0) {
+    showToast('Nenhuma figurinha repetida!');
+    return;
+  }
+
+  const lines = [];
+  const teamOrder = [...Object.keys(teams), 'FWC', 'CC'];
+
+  teamOrder.forEach(team => {
+    if (!repeated[team]) return;
+    const emoji = teamEmoji[team] || '';
+    const nums  = repeated[team].join(', ');
+    lines.push(`${team} ${emoji}: ${nums}`);
+  });
+
+  const text = lines.join('\n');
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('📋 Repetidas copiadas!'))
+      .catch(() => { fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
 }
 
 // ─── COPIAR FALTANDO ─────────────────────────────────────────────────────────
